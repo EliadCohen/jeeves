@@ -44,7 +44,9 @@ def test_has_blockers():
 		'job4': {'bz': [0]},
 		'job5': {'jira': [0]},
 		'job6': {'other': [0]},
-		'job7': {}
+		'job7': {'owners': 'foo@bar.com'},
+		'job8': {'owners': 'foo@bar.com', 'bz': [123456], 'jira': ['RHOSINFRA-123']},
+		'job9': {}
 	}
 	assert has_blockers(mockers, 'job1') == True
 	assert has_blockers(mockers, 'job2') == True
@@ -53,6 +55,8 @@ def test_has_blockers():
 	assert has_blockers(mockers, 'job5') == False
 	assert has_blockers(mockers, 'job6') == False
 	assert has_blockers(mockers, 'job7') == False
+	assert has_blockers(mockers, 'job8') == True
+	assert has_blockers(mockers, 'job9') == False
 
 
 def test_percent_func():
