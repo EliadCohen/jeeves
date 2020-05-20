@@ -156,7 +156,7 @@ def get_jenkins_job_info(server, job_name):
 
 		# Unknown error, skip job
 		else:
-			print("Jenkins API call error on job {}: {}".format(job_name, e))
+			print("Jenkins API call error on job {}: {} - skipping...".format(job_name, e))
 			return False
 
 	jenkins_api_info = {
@@ -243,7 +243,11 @@ def get_jira_dict(ticket_ids, config):
 				'ticket_name': ticket_name,
 				'ticket_url': ticket_url
 			}
-	jira.close()
+
+	# close Jira connection if open
+	if jira is not None:
+		jira.close()
+
 	return tickets
 
 
@@ -305,3 +309,27 @@ def percent(part, whole):
 	''' basic percent function
 	'''
 	return round(100 * float(part) / float(whole), 1)
+
+
+def validate_config(config):
+	''' validates config fields
+		raises exception if required field is not present
+	'''
+	required_fields = [
+		'jenkins_url',
+		'jenkins_username',
+		'jenkins_api_token',
+		'job_search_fields',
+		'bz_url',
+		'jira_url',
+		'jira_username',
+		'jira_password',
+		'certificate',
+		'smtp_host',
+		'email_subject',
+		'email_to'
+	]
+	for field in required_fields:
+		if config.get(field) is None:
+			raise Exception('field "{}" is not defined'.format(field))
+	return None
